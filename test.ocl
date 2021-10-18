@@ -1,0 +1,20 @@
+action "do_stuff" {
+  action_type                        = "something"
+  can_be_used_for_project_versioning = false
+  channels                           = []
+  condition                          = ""
+  container                          = {
+  }
+  environments                       = []
+  excluded_environments              = []
+  features                           = {
+  }
+  is_disabled                        = false
+  is_required                        = false
+  properties                         = {
+  }
+  notes                              = ""
+  tenant_tags                        = []
+  worker_pool                        = ""
+  worker_pool_variable               = ""
+}
