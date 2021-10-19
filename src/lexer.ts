@@ -73,21 +73,24 @@ export class Lexer {
       case '=': {
         return this.tokenizeCurrentChar(TokenType.ASSIGNMENT_OP);
       }
+      case ',': {
+        return this.tokenizeCurrentChar(TokenType.ARRAY_ITEM_SEPERATOR);
+      }
       case 'EOF': {
         return this.tokenizeCurrentChar(TokenType.EOF);
       }
       default: {
         let value = '';
-        while (!['EOF', '\n', ' ', '"', '=', '{', '}', '[', ']', '\''].includes(this.currentChar)) {
+        while (!['EOF', '\n', ' ', '"', '=', '{', '}', '[', ']', '\'', ','].includes(this.currentChar)) {
           value += this.currentChar;
           this.nextChar();
         }
-        return new Token(
-          value,
-          this.currentTokenLn,
-          this.currentTokenCol,
-          TokenType.SYMBOL
-        );
+        return {
+          value: value,
+          ln: this.currentTokenLn,
+          col: this.currentTokenCol,
+          tokenType: TokenType.SYMBOL
+        };
       }
     }
   }
@@ -198,17 +201,18 @@ export class Lexer {
   }
 
   private tokenizeNumberLiteral(): Token {
-    let value = this.currentChar;
+    let value = ''
     let decimalTally = 0;
     let tokenType = TokenType.INTEGER;
-    this.nextChar();
     while (!Number.isNaN(parseInt(this.currentChar))) {
       value += this.currentChar;
-      if (this.currentChar === '.') {
+      this.nextChar();
+      while (this.currentChar === '.') {
         decimalTally += 1;
         tokenType = TokenType.DECIMAL;
+        value += this.currentChar;
+        this.nextChar();
       }
-      this.nextChar();
     }
     if (decimalTally > 1) {
       return this.tokenizeValue(
@@ -234,12 +238,12 @@ export class Lexer {
   }
 
   private tokenizeValue(value: string, tokenType: TokenType, error?: string): Token {
-    return new Token(
-      value,
-      this.currentTokenLn,
-      this.currentTokenCol,
-      tokenType,
-      error,
-    );
+    return {
+      value: value,
+      ln: this.currentTokenLn,
+      col: this.currentTokenCol,
+      tokenType: tokenType,
+      tokenError: error,
+    };
   }
 }
