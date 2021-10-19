@@ -106,22 +106,34 @@ test("invalid empty block with newline before open bracket", () => {
     expect(lexer).not.toBeUndefined();
 
     let token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.SYMBOL);
+    expect(token.value).toEqual(`my_block`);
 
     token = lexer.nextToken();
+    expect(token.tokenError).toBeDefined();
     expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
 
     token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.OPEN_BRACKET);
+    expect(token.value).toEqual(`{`);
 
     token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
 
     token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.CLOSE_BRACKET);
+    expect(token.value).toEqual(`}`);
 
     token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.EOF);
+    expect(token.value).toEqual(`EOF`);
 });
 
 test("invalid empty block with unquoted label", () => {
