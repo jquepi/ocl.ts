@@ -23,7 +23,7 @@ test("invalid integer attribute with newline before value", () => {
     token = lexer.nextToken();
     expect(token.col).toEqual(16);
     expect(token.ln).toEqual(1);
-    // expect(token.tokenError).toBeDefined();
+    expect(token.tokenError).toBeDefined();
     expect(token.tokenType).toEqual(TokenType.NEW_LINE);
     expect(token.value).toEqual(`\n`);
 
