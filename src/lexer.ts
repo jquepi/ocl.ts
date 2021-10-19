@@ -44,7 +44,7 @@ export class Lexer {
     this.currentTokenLn = this.ln;
     this.currentTokenCol = this.col;
 
-    if (!Number.isNaN(parseInt(this.currentChar))) {
+    if (!Number.isNaN(parseInt(this.currentChar)) || this.currentChar === '-') {
       return this.tokenizeNumberLiteral();
     }
 
@@ -204,6 +204,17 @@ export class Lexer {
     let value = ''
     let decimalTally = 0;
     let tokenType = TokenType.INTEGER;
+    if (this.currentChar === '-') {
+      value += this.currentChar;
+      this.nextChar();
+      if (Number.isNaN(parseInt(this.currentChar))) {
+        return this.tokenizeValue(
+          value,
+          tokenType,
+          `Expected number; Got ${this.currentChar}`
+        )
+      }
+    }
     while (!Number.isNaN(parseInt(this.currentChar))) {
       value += this.currentChar;
       this.nextChar();
