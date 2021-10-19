@@ -52,6 +52,9 @@ export class Lexer {
       case '"': {
         return this.tokenizeStringLiteral();
       }
+      case '<': {
+        return this.tokenizeHeredoc();
+      }
       case '\n': {
         return this.tokenizeCurrentChar(TokenType.NEW_LINE);
       }
@@ -115,6 +118,85 @@ export class Lexer {
     );
   }
 
+  private tokenizeHeredoc(): Token {
+    let value = this.currentChar;
+    let tokenType = TokenType.HEREDOC;
+    this.nextChar();
+    let char = this.currentChar;
+    if (char !== '<') {
+      return this.tokenizeValue(
+        value,
+        tokenType,
+        `Expected <; Got ${this.currentChar}`
+      );
+    }
+    value += this.currentChar;
+    this.nextChar();
+    char = this.currentChar;
+    if (char === '-') {
+      tokenType = TokenType.INDENTED_HEREDOC;
+      value += this.currentChar;
+      this.nextChar();
+      char = this.currentChar;
+    }
+    if (char === ' ' || char === '\n') {
+      return this.tokenizeValue(
+        value,
+        tokenType,
+        `Expected Heredoc tag; Got whitespace`
+      );
+    }
+    let tag = '';
+    while(![' ', '\n'].includes(this.currentChar)) {
+      tag += this.currentChar;
+      value += this.currentChar;
+      this.nextChar();
+    }
+    while (this.currentChar === ' ') {
+      this.nextChar();
+    }
+    char = this.currentChar;
+    if (char !== '\n') {
+      return this.tokenizeValue(
+        value,
+        tokenType,
+        `Expected \\\\n; Got ${char}`
+      );
+    }
+    value += this.currentChar;
+    this.nextChar();
+    let foundEndTag = false;
+    while(!foundEndTag && this.currentChar !== 'EOF') {
+      let currentLn = '';
+      while (!['\n', 'EOF'].includes(this.currentChar)) {
+        value += this.currentChar;
+        currentLn += this.currentChar;
+        this.nextChar();
+      }
+      if (currentLn.trim() === tag) {
+        foundEndTag = true;
+        break;
+      }
+      if (this.currentChar === 'EOF') {
+        break;
+      }
+      value += this.currentChar;
+      this.nextChar();
+    }
+    if (!foundEndTag) {
+      return this.tokenizeValue(
+        value,
+        tokenType,
+        `expected end tag "${tag}"; Got EOF`
+      );
+    }
+
+    return this.tokenizeValue(
+      value,
+      tokenType
+    );
+  }
+
   private tokenizeNumberLiteral(): Token {
     let value = this.currentChar;
     let decimalTally = 0;
@@ -133,12 +215,12 @@ export class Lexer {
         value,
         tokenType,
         `Expected 1 decimal; Got ${decimalTally}`
-      )
+      );
     }
     return this.tokenizeValue(
       value,
       tokenType
-    )
+    );
   }
 
   private tokenizeCurrentChar(tokenType: TokenType, error?: string): Token {

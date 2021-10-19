@@ -10,6 +10,8 @@ export enum TokenType {
   ASSIGNMENT_OP,
   NEW_LINE,
   EOF,
+  HEREDOC,
+  INDENTED_HEREDOC,
 }
 
 export class Token {
