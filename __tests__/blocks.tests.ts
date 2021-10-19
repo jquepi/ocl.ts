@@ -126,25 +126,49 @@ test("invalid empty block with newline before open bracket", () => {
 
 test("invalid empty block with unquoted label", () => {
     const lexer = new Lexer(`my block {
-    }`);
+}`);
     expect(lexer).not.toBeUndefined();
 
     let token = lexer.nextToken();
+    expect(token.col).toEqual(1);
+    expect(token.ln).toEqual(1);
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.SYMBOL);
+    expect(token.value).toEqual(`my`);
 
     token = lexer.nextToken();
+    expect(token.col).toEqual(4);
+    expect(token.ln).toEqual(1);
+    expect(token.tokenError).toBeDefined();
     expect(token.tokenType).toEqual(TokenType.SYMBOL);
+    expect(token.value).toEqual(`block`);
 
     token = lexer.nextToken();
+    expect(token.col).toEqual(10);
+    expect(token.ln).toEqual(1);
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.OPEN_BRACKET);
+    expect(token.value).toEqual(`{`);
 
     token = lexer.nextToken();
+    expect(token.col).toEqual(11);
+    expect(token.ln).toEqual(1);
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
 
     token = lexer.nextToken();
+    expect(token.col).toEqual(1);
+    expect(token.ln).toEqual(2);
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.CLOSE_BRACKET);
+    expect(token.value).toEqual(`}`);
 
     token = lexer.nextToken();
+    expect(token.col).toEqual(2);
+    expect(token.ln).toEqual(2);
+    expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.EOF);
+    expect(token.value).toEqual(`EOF`);
 });
 
