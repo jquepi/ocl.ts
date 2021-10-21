@@ -94,7 +94,7 @@ export class Lexer {
       }
     }
   }
-
+  
   private tokenizeStringLiteral(): Token {
     let value = this.currentChar;
     this.nextChar();

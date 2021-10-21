@@ -1,7 +1,7 @@
 import { Token } from "./token";
 
 export type AST = ASTNode[];
-export type ASTNode = AttributeNode | DictionaryNode | ArrayNode | LiteralNode | BlockNode | EOFNode;
+export type ASTNode = AttributeNode | DictionaryNode | ArrayNode | LiteralNode | BlockNode | EOFNode | RecoveryNode;
 
 export enum NodeType {
   ATTRIBUTE_NODE = 'AttributeNode',
@@ -9,7 +9,8 @@ export enum NodeType {
   LITERAL_NODE = 'LiteralNode',
   ARRAY_NODE = 'ArrayNode',
   BLOCK_NODE = 'BlockNode',
-  EOF_NODE = 'EOFNode'
+  EOF_NODE = 'EOFNode',
+  RECOVERY_NODE = 'RecoveryNode'
 }
 
 export enum LiteralType {
@@ -24,6 +25,7 @@ export interface BaseNode {
   type: NodeType;
   children?: AST;
   parent?: ASTNode;
+  problems?: string[];
 }
 
 export interface AttributeNode extends BaseNode {
@@ -66,4 +68,10 @@ export interface BlockNode extends BaseNode {
 
 export interface EOFNode extends BaseNode {
   value: Token;
+  type: NodeType.EOF_NODE;
+}
+
+export interface RecoveryNode extends BaseNode {
+  type: NodeType.RECOVERY_NODE;
+  unexpectedToken: Token;
 }

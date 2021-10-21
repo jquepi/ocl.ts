@@ -8,7 +8,8 @@ import {
   EOFNode,
   LiteralNode,
   LiteralType, 
-  NodeType
+  NodeType,
+  RecoveryNode
 } from "./ast";
 import { Lexer } from "./lexer";
 import { Token, TokenType } from "./token";
@@ -80,7 +81,6 @@ export class Parser {
       }
       case TokenType.OPEN_BRACKET: {
         return this.handleBlockNode();
-        break;
       }
       default: {
         // TODO change to handle unexpted token
@@ -125,8 +125,11 @@ export class Parser {
         break;
       }
       default: {
-        // TODO handle unexpected token
-        value = this.handleLiteralNode(LiteralType.STRING);
+        value = this.handleRecoveryNode(
+          'Unexpected token. Expected literal, dictionary or array after assignment operator.',
+          this.currentToken
+        );
+        break;
       }
     }
     const attributetNode: AttributeNode = {
@@ -141,13 +144,21 @@ export class Parser {
     return attributetNode;
   }
 
-  private handleLiteralNode(literalType: LiteralType): LiteralNode {
-    // TODO handle if next token is not new line or EOF
-    // TODO Handle errors in tokens errors
+  private handleLiteralNode(literalType: LiteralType, newLineRequired = true): LiteralNode {
+    const problems: string[] = [];
+    if (newLineRequired === true) {
+      if (![TokenType.NEW_LINE, TokenType.EOF].includes(this.peekToken().tokenType)) {
+        problems.push('Unexpected token. Expected next token to be newline.')
+      }
+    }
+    if (this.currentToken.tokenError) {
+      problems.push(this.currentToken.tokenError);
+    }
     return {
       literalType,
       type: NodeType.LITERAL_NODE,
-      value: this.currentToken
+      value: this.currentToken,
+      problems: problems,
     }
   }
 
@@ -188,15 +199,15 @@ export class Parser {
       // TODO handle when token is not litteral or seperator
       switch (this.currentToken.tokenType) {
         case TokenType.STRING: {
-          values.push(this.handleLiteralNode(LiteralType.STRING));
+          values.push(this.handleLiteralNode(LiteralType.STRING, false));
           break;
         }
         case TokenType.INTEGER: {
-          values.push(this.handleLiteralNode(LiteralType.INTEGER));
+          values.push(this.handleLiteralNode(LiteralType.INTEGER, false));
           break;
         }
         case TokenType.DECIMAL: {
-          values.push(this.handleLiteralNode(LiteralType.DECIMAL));
+          values.push(this.handleLiteralNode(LiteralType.DECIMAL, false));
           break;
         }
         // case TokenType.OPEN_BRACKET: {
@@ -237,7 +248,7 @@ export class Parser {
     this.nextToken();
     const lables: BlockNode["lables"] = [];
     while (this.currentToken.tokenType === TokenType.STRING) {
-      lables.push(this.handleLiteralNode(LiteralType.STRING));
+      lables.push(this.handleLiteralNode(LiteralType.STRING, false));
       this.nextToken();
     }
     if (this.currentToken.tokenType !== TokenType.OPEN_BRACKET) {
@@ -272,6 +283,14 @@ export class Parser {
       astNode.parent = blockNode;
     }
     return blockNode;
+  }
+
+  private handleRecoveryNode(errorMsg: string, unexpectedToken: Token): RecoveryNode {
+    return {
+      problems: [errorMsg],
+      type: NodeType.RECOVERY_NODE,
+      unexpectedToken
+    };
   }
 
   private createAST(): void {
