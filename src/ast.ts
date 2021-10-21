@@ -1,4 +1,4 @@
-import { Token } from "./token";
+import type { Token } from "./token";
 
 export type AST = ASTNode[];
 export type ASTNode = AttributeNode | DictionaryNode | ArrayNode | LiteralNode | BlockNode | EOFNode | RecoveryNode;

@@ -11,7 +11,7 @@ import {
   NodeType,
   RecoveryNode
 } from "./ast";
-import { Lexer } from "./lexer";
+import type { Lexer } from "./lexer";
 import { Token, TokenType } from "./token";
 
 export class Parser {
