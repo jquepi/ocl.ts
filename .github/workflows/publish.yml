@@ -23,6 +23,7 @@ jobs:
 
       - name: npm build and package
         run: |
+          npm ci
           npm run build
           npm publish --access=public
         env:
