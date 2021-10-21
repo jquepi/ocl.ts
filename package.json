@@ -27,12 +27,17 @@
   "license": "https://github.com/OctopusDeploy/ocl.ts/blob/main/LICENSE",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "name": "@octopusdeploy/ocl.ts",
+  "name": "@octopusdeploy/ocl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OctopusDeploy/ocl.ts.git"
+  },
   "scripts": {
     "build": "tsc --p tsconfig.json",
     "prepare": "npm run build",
     "start": "ts-node ./src/main.ts",
     "test": "jest"
   },
+  "types": "dist/index.d.ts",
   "version": "0.0.1"
 }
