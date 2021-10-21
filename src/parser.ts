@@ -64,9 +64,12 @@ export class Parser {
         } as EOFNode;
       }
       default: {
+        const token = this.currentToken;
         this.nextToken();
-        // TODO handle unexpected
-        return {} as ASTNode;
+        return this.handleRecoveryNode(
+          'Unexpected Token. Expected Assignment Name or Block Name.',
+          token
+        );
       }
     }
   }
