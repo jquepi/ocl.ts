@@ -128,10 +128,18 @@ export class Parser {
         break;
       }
       default: {
-        value = this.handleRecoveryNode(
-          'Unexpected token. Expected literal, dictionary or array after assignment operator.',
-          this.currentToken
-        );
+        if (this.currentToken.value === 'true') {
+          value = this.handleLiteralNode(LiteralType.TRUE);
+        }
+        else if (this.currentToken.value === 'false') {
+          value = this.handleLiteralNode(LiteralType.FALSE);
+        }
+        else {
+          value = this.handleRecoveryNode(
+            'Unexpected token. Expected literal, dictionary or array after assignment operator.',
+            this.currentToken
+          );
+        }
         break;
       }
     }
@@ -170,15 +178,16 @@ export class Parser {
     this.nextToken();
     // TODO handle missing newline
     const entries: DictionaryNode["entries"] = [];
-    while (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+    while (this.peekToken().tokenType !== TokenType.CLOSE_BRACKET) {
       // TODO handle when token is not attibute
       if (this.currentToken.tokenType === TokenType.SYMBOL) {
         entries.push(this.handleAttribute());
-      }
-      this.nextToken();
+      } else {
+        this.nextToken();
+      } 
     }
-    const blockEnd = this.currentToken;
     this.nextToken();
+    const blockEnd = this.currentToken;
     // TODO handle missing newline
     const dictionaryNode: DictionaryNode = {
       children: entries,
@@ -262,7 +271,7 @@ export class Parser {
     // TODO handle new line
     this.nextToken();
     const block: BlockNode["block"] = [];
-    while (this.peekToken().tokenType !== TokenType.CLOSE_BRACKET) {
+    while (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType)) {
       block.push(this.nextNode());
     }
     this.nextToken();

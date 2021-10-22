@@ -58,6 +58,10 @@ export class Lexer {
       case '\n': {
         return this.tokenizeCurrentChar(TokenType.NEW_LINE);
       }
+      case '\r': {
+        this.nextChar();
+        return this.tokenizeCurrentChar(TokenType.NEW_LINE);
+      }
       case '{': {
         return this.tokenizeCurrentChar(TokenType.OPEN_BRACKET);
       }
@@ -81,7 +85,7 @@ export class Lexer {
       }
       default: {
         let value = '';
-        while (!['EOF', '\n', ' ', '"', '=', '{', '}', '[', ']', '\'', ','].includes(this.currentChar)) {
+        while (!['EOF', '\n', '\r', ' ', '"', '=', '{', '}', '[', ']', '\'', ','].includes(this.currentChar)) {
           value += this.currentChar;
           this.nextChar();
         }
@@ -142,7 +146,11 @@ export class Lexer {
       this.nextChar();
       char = this.currentChar;
     }
-    if (char === ' ' || char === '\n') {
+    if (char === ' ' || char === '\n' || char === '\r') {
+      if (char === '\r') {
+        this.nextChar();
+        char = this.currentChar;
+      }
       return this.tokenizeValue(
         value,
         tokenType,
@@ -150,12 +158,12 @@ export class Lexer {
       );
     }
     let tag = '';
-    while(![' ', '\n'].includes(this.currentChar)) {
+    while(![' ', '\n', '\r'].includes(this.currentChar)) {
       tag += this.currentChar;
       value += this.currentChar;
       this.nextChar();
     }
-    while (this.currentChar === ' ') {
+    while (this.currentChar === ' ' || this.currentChar === '\r') {
       this.nextChar();
     }
     char = this.currentChar;
@@ -163,7 +171,7 @@ export class Lexer {
       return this.tokenizeValue(
         value,
         tokenType,
-        `Expected \\\\n; Got ${char}`
+        `Expected new line; Got ${char}`
       );
     }
     value += this.currentChar;
@@ -171,7 +179,7 @@ export class Lexer {
     let foundEndTag = false;
     while(!foundEndTag && this.currentChar !== 'EOF') {
       let currentLn = '';
-      while (!['\n', 'EOF'].includes(this.currentChar)) {
+      while (!['\n', '\r', 'EOF'].includes(this.currentChar)) {
         value += this.currentChar;
         currentLn += this.currentChar;
         this.nextChar();

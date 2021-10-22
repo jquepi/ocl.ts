@@ -18,6 +18,8 @@ export enum LiteralType {
   INTEGER = 'integer',
   DECIMAL = 'decimal',
   HEREDOC = 'heredoc',
+  TRUE = 'true',
+  FALSE = 'false',
   INDENTED_HEREDOC = 'indentedHeredoc'
 }
 
@@ -30,6 +32,7 @@ export interface BaseNode {
 
 export interface AttributeNode extends BaseNode {
   children: AST;
+  type: NodeType.ATTRIBUTE_NODE;
   assignmentOp: Token;
   name: Token;
   value: ASTNode;
@@ -59,6 +62,7 @@ export interface LiteralNode extends BaseNode {
 
 export interface BlockNode extends BaseNode {
   children: AST;
+  type: NodeType.BLOCK_NODE;
   name: Token;
   lables?: LiteralNode[];
   blockStart: Token;
