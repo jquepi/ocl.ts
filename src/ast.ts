@@ -4,23 +4,23 @@ export type AST = ASTNode[];
 export type ASTNode = AttributeNode | DictionaryNode | ArrayNode | LiteralNode | BlockNode | EOFNode | RecoveryNode;
 
 export enum NodeType {
-  ATTRIBUTE_NODE = 'AttributeNode',
-  DICTIONARY_NODE = 'DictionaryNode',
-  LITERAL_NODE = 'LiteralNode',
   ARRAY_NODE = 'ArrayNode',
+  ATTRIBUTE_NODE = 'AttributeNode',
   BLOCK_NODE = 'BlockNode',
+  DICTIONARY_NODE = 'DictionaryNode',
   EOF_NODE = 'EOFNode',
+  LITERAL_NODE = 'LiteralNode',
   RECOVERY_NODE = 'RecoveryNode'
 }
 
 export enum LiteralType {
-  STRING = 'string',
-  INTEGER = 'integer',
   DECIMAL = 'decimal',
-  HEREDOC = 'heredoc',
-  TRUE = 'true',
   FALSE = 'false',
-  INDENTED_HEREDOC = 'indentedHeredoc'
+  HEREDOC = 'heredoc',
+  INDENTED_HEREDOC = 'indentedHeredoc',
+  INTEGER = 'integer',
+  STRING = 'string',
+  TRUE = 'true'
 }
 
 export interface BaseNode {
