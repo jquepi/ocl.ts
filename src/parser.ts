@@ -258,9 +258,9 @@ export class Parser {
   private handleBlockNode(): BlockNode {
     const name = this.currentToken;
     this.nextToken();
-    const lables: BlockNode["lables"] = [];
+    const labels: BlockNode["labels"] = [];
     while (this.currentToken.tokenType === TokenType.STRING) {
-      lables.push(this.handleLiteralNode(LiteralType.STRING, false));
+      labels.push(this.handleLiteralNode(LiteralType.STRING, false));
       this.nextToken();
     }
     if (this.currentToken.tokenType !== TokenType.OPEN_BRACKET) {
@@ -285,11 +285,11 @@ export class Parser {
       type: NodeType.BLOCK_NODE,
       name,
     }
-    if (lables.length > 0) {
-      for (const lable of lables) {
-        lable.parent = blockNode;
+    if (labels.length > 0) {
+      for (const label of labels) {
+        label.parent = blockNode;
       }
-      blockNode.lables = lables;
+      blockNode.labels = labels;
     }
     for (const astNode of block) {
       astNode.parent = blockNode;

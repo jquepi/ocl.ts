@@ -64,7 +64,7 @@ export interface BlockNode extends BaseNode {
   children: AST;
   type: NodeType.BLOCK_NODE;
   name: Token;
-  lables?: LiteralNode[];
+  labels?: LiteralNode[];
   blockStart: Token;
   block: AST;
   blockEnd: Token;
