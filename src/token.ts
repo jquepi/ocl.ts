@@ -1,24 +1,24 @@
 export enum TokenType {
-  STRING,
-  INTEGER,
-  DECIMAL,
-  SYMBOL,
-  OPEN_BRACKET,
-  CLOSE_BRACKET,
-  OPEN_ARRAY,
-  CLOSE_ARRAY,
   ARRAY_ITEM_SEPERATOR,
   ASSIGNMENT_OP,
-  NEW_LINE,
+  CLOSE_ARRAY,
+  CLOSE_BRACKET,
+  DECIMAL,
   EOF,
   HEREDOC,
   INDENTED_HEREDOC,
+  INTEGER,
+  NEW_LINE,
+  OPEN_ARRAY,
+  OPEN_BRACKET,
+  STRING,
+  SYMBOL
 }
 
 export interface Token {
-  readonly value: string;
-  readonly ln: number;
   readonly col: number;
-  readonly tokenType: TokenType;
+  readonly ln: number;
   readonly tokenError?: string;
+  readonly tokenType: TokenType;
+  readonly value: string;
 }
