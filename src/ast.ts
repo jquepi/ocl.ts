@@ -24,55 +24,55 @@ export enum LiteralType {
 }
 
 export interface BaseNode {
-  type: NodeType;
   children?: AST;
   parent?: ASTNode;
   problems?: string[];
-}
-
-export interface AttributeNode extends BaseNode {
-  children: AST;
-  type: NodeType.ATTRIBUTE_NODE;
-  assignmentOp: Token;
-  name: Token;
-  value: ASTNode;
-}
-
-export interface DictionaryNode extends BaseNode {
-  children: AST;
-  type: NodeType.DICTIONARY_NODE;
-  blockStart: Token;
-  entries: AttributeNode[];
-  blockEnd: Token;
+  type: NodeType;
 }
 
 export interface ArrayNode extends BaseNode {
+  arrayEnd: Token;
+  arrayStart: Token;
   children: AST;
   type: NodeType.ARRAY_NODE;
-  arrayStart: Token;
   values: (LiteralNode|DictionaryNode)[];
-  arrayEnd: Token;
 }
 
-export interface LiteralNode extends BaseNode {
-  type: NodeType.LITERAL_NODE;
-  value: Token;
-  literalType: LiteralType;
+export interface AttributeNode extends BaseNode {
+  assignmentOp: Token;
+  children: AST;
+  name: Token;
+  type: NodeType.ATTRIBUTE_NODE;
+  value: ASTNode;
 }
 
 export interface BlockNode extends BaseNode {
-  children: AST;
-  type: NodeType.BLOCK_NODE;
-  name: Token;
-  labels?: LiteralNode[];
-  blockStart: Token;
   block: AST;
   blockEnd: Token;
+  blockStart: Token;
+  children: AST;
+  labels?: LiteralNode[];
+  name: Token;
+  type: NodeType.BLOCK_NODE;
+}
+
+export interface DictionaryNode extends BaseNode {
+  blockEnd: Token;
+  blockStart: Token;
+  children: AST;
+  entries: AttributeNode[];
+  type: NodeType.DICTIONARY_NODE;
 }
 
 export interface EOFNode extends BaseNode {
-  value: Token;
   type: NodeType.EOF_NODE;
+  value: Token;
+}
+
+export interface LiteralNode extends BaseNode {
+  literalType: LiteralType;
+  type: NodeType.LITERAL_NODE;
+  value: Token;
 }
 
 export interface RecoveryNode extends BaseNode {

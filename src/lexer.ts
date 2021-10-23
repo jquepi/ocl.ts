@@ -2,21 +2,21 @@ import { Token, TokenType } from "./token";
 
 export class Lexer {
   private code: string;
-  private pc: number;
   private col: number;
   private ln: number;
+  private currentChar: string;
   private currentTokenCol: number;
   private currentTokenLn: number;
-  private currentChar: string;
+  private pc: number;
 
   constructor(code: string) {
     this.code = code;
-    this.pc = -1;
     this.col = 0;
-    this.ln = 1;
     this.currentTokenCol = 0;
     this.currentTokenLn = 0;
     this.currentChar = '';
+    this.ln = 1;
+    this.pc = -1;
     this.nextChar();
   }
 
