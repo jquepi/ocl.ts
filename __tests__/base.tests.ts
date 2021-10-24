@@ -5,7 +5,7 @@ test("string length of zero", () => {
     const lexer = new Lexer(``);
     expect(lexer).toBeDefined();
 
-    let token = lexer.nextToken();
+    const token = lexer.nextToken();
     expect(token.col).toEqual(1);
     expect(token.ln).toEqual(1);
     expect(token.tokenError).toBeUndefined();
@@ -17,7 +17,7 @@ test("whitespace string", () => {
     const lexer = new Lexer(` `);
     expect(lexer).toBeDefined();
 
-    let token = lexer.nextToken();
+    const token = lexer.nextToken();
     expect(token.col).toEqual(2);
     expect(token.ln).toEqual(1);
     expect(token.tokenError).toBeUndefined();
