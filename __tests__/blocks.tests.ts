@@ -1,4 +1,5 @@
 import { Lexer } from "../src/lexer";
+import { Parser } from "../src/parser";
 import { TokenType } from "../src/token";
 
 test("block_with_children_and_labels", () => {
@@ -100,15 +101,48 @@ test("inline empty block", () => {
 });
 
 test("block with delimited attribute value", () => {
-    const lexer = new Lexer(`block {
-        template = "#{value1}.#{value-2}"
+    const lexer = new Lexer(`connectivity_policy {
+    }
+    
+    versioning_strategy {
+        template = "#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.NextPatch}"
     }`);
     expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.SYMBOL);
-    expect(token.value).toEqual(`block`);
+    expect(token.value).toEqual(`connectivity_policy`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.OPEN_BRACKET);
+    expect(token.value).toEqual(`{`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.CLOSE_BRACKET);
+    expect(token.value).toEqual(`}`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.NEW_LINE);
+    expect(token.value).toEqual(`\n`);
+
+    token = lexer.nextToken();
+    expect(token.tokenError).toBeUndefined();
+    expect(token.tokenType).toEqual(TokenType.SYMBOL);
+    expect(token.value).toEqual(`versioning_strategy`);
 
     token = lexer.nextToken();
     expect(token.tokenError).toBeUndefined();
@@ -133,7 +167,7 @@ test("block with delimited attribute value", () => {
     token = lexer.nextToken();
     expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.STRING);
-    expect(token.value).toEqual(`"#{value1}.#{value-2}"`);
+    expect(token.value).toEqual(`"#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.NextPatch}"`);
 
     token = lexer.nextToken();
     expect(token.tokenError).toBeUndefined();
@@ -149,6 +183,12 @@ test("block with delimited attribute value", () => {
     expect(token.tokenError).toBeUndefined();
     expect(token.tokenType).toEqual(TokenType.EOF);
     expect(token.value).toEqual(`EOF`);
+
+    const parser = new Parser(lexer);
+    expect(parser).toBeDefined();
+
+    const ast = parser.getAST();
+    expect(ast).toBeDefined();
 });
 
 test("invalid empty block with newline before open bracket", () => {
