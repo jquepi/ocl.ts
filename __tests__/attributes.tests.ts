@@ -4,7 +4,7 @@ import { TokenType } from "../src/token";
 test("invalid integer attribute with newline before assignment operator", () => {
     const lexer = new Lexer(`int_attribute
     = 1`);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);
@@ -45,7 +45,7 @@ test("invalid integer attribute with newline before assignment operator", () => 
 test("invalid integer attribute with newline before value", () => {
     const lexer = new Lexer(`int_attribute =
  1`);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);
@@ -85,7 +85,7 @@ test("invalid integer attribute with newline before value", () => {
 
 test("integer attribute", () => {
     const lexer = new Lexer(`int_attribute = 1`);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);

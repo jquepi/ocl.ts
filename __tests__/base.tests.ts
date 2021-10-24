@@ -3,7 +3,7 @@ import { TokenType } from "../src/token";
 
 test("string length of zero", () => {
     const lexer = new Lexer(``);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);
@@ -15,7 +15,7 @@ test("string length of zero", () => {
 
 test("whitespace string", () => {
     const lexer = new Lexer(` `);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(2);
@@ -27,7 +27,7 @@ test("whitespace string", () => {
 
 test("emoji", () => {
     const lexer = new Lexer(`🐙`);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);
@@ -46,7 +46,7 @@ test("emoji", () => {
 
 test("emoji in quotes", () => {
     const lexer = new Lexer(`"🐙"`);
-    expect(lexer).not.toBeUndefined();
+    expect(lexer).toBeDefined();
 
     let token = lexer.nextToken();
     expect(token.col).toEqual(1);

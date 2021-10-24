@@ -1,0 +1,472 @@
+[
+  {
+    "block": [
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 2,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "action_type",
+          "ln": 2,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "string",
+          "type": "LiteralNode",
+          "value": {
+            "value": "\"something\"",
+            "ln": 2,
+            "col": 40,
+            "tokenType": "STRING"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 3,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "can_be_used_for_project_versioning",
+          "ln": 3,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "false",
+          "type": "LiteralNode",
+          "value": {
+            "value": "false",
+            "ln": 3,
+            "col": 40,
+            "tokenType": "SYMBOL"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 4,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "channels",
+          "ln": 4,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "type": "ArrayNode",
+          "arrayStart": {
+            "value": "[",
+            "ln": 4,
+            "col": 40,
+            "tokenType": "OPEN_ARRAY"
+          },
+          "arrayEnd": {
+            "value": "]",
+            "ln": 4,
+            "col": 41,
+            "tokenType": "CLOSE_ARRAY"
+          },
+          "values": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 5,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "condition",
+          "ln": 5,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "string",
+          "type": "LiteralNode",
+          "value": {
+            "value": "\"\"",
+            "ln": 5,
+            "col": 40,
+            "tokenType": "STRING"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 6,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "container",
+          "ln": 6,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "blockStart": {
+            "value": "{",
+            "ln": 6,
+            "col": 40,
+            "tokenType": "OPEN_BRACKET"
+          },
+          "blockEnd": {
+            "value": "}",
+            "ln": 7,
+            "col": 3,
+            "tokenType": "CLOSE_BRACKET"
+          },
+          "entries": [],
+          "type": "DictionaryNode"
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 8,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "environments",
+          "ln": 8,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "type": "ArrayNode",
+          "arrayStart": {
+            "value": "[",
+            "ln": 8,
+            "col": 40,
+            "tokenType": "OPEN_ARRAY"
+          },
+          "arrayEnd": {
+            "value": "]",
+            "ln": 8,
+            "col": 41,
+            "tokenType": "CLOSE_ARRAY"
+          },
+          "values": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 9,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "excluded_environments",
+          "ln": 9,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "type": "ArrayNode",
+          "arrayStart": {
+            "value": "[",
+            "ln": 9,
+            "col": 40,
+            "tokenType": "OPEN_ARRAY"
+          },
+          "arrayEnd": {
+            "value": "]",
+            "ln": 9,
+            "col": 41,
+            "tokenType": "CLOSE_ARRAY"
+          },
+          "values": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 10,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "features",
+          "ln": 10,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "blockStart": {
+            "value": "{",
+            "ln": 10,
+            "col": 40,
+            "tokenType": "OPEN_BRACKET"
+          },
+          "blockEnd": {
+            "value": "}",
+            "ln": 11,
+            "col": 3,
+            "tokenType": "CLOSE_BRACKET"
+          },
+          "entries": [],
+          "type": "DictionaryNode"
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 12,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "is_disabled",
+          "ln": 12,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "false",
+          "type": "LiteralNode",
+          "value": {
+            "value": "false",
+            "ln": 12,
+            "col": 40,
+            "tokenType": "SYMBOL"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 13,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "is_required",
+          "ln": 13,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "false",
+          "type": "LiteralNode",
+          "value": {
+            "value": "false",
+            "ln": 13,
+            "col": 40,
+            "tokenType": "SYMBOL"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 14,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "properties",
+          "ln": 14,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "blockStart": {
+            "value": "{",
+            "ln": 14,
+            "col": 40,
+            "tokenType": "OPEN_BRACKET"
+          },
+          "blockEnd": {
+            "value": "}",
+            "ln": 15,
+            "col": 3,
+            "tokenType": "CLOSE_BRACKET"
+          },
+          "entries": [],
+          "type": "DictionaryNode"
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 16,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "notes",
+          "ln": 16,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "string",
+          "type": "LiteralNode",
+          "value": {
+            "value": "\"\"",
+            "ln": 16,
+            "col": 40,
+            "tokenType": "STRING"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 17,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "tenant_tags",
+          "ln": 17,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "type": "ArrayNode",
+          "arrayStart": {
+            "value": "[",
+            "ln": 17,
+            "col": 40,
+            "tokenType": "OPEN_ARRAY"
+          },
+          "arrayEnd": {
+            "value": "]",
+            "ln": 17,
+            "col": 41,
+            "tokenType": "CLOSE_ARRAY"
+          },
+          "values": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 18,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "worker_pool",
+          "ln": 18,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "string",
+          "type": "LiteralNode",
+          "value": {
+            "value": "\"\"",
+            "ln": 18,
+            "col": 40,
+            "tokenType": "STRING"
+          },
+          "problems": []
+        }
+      },
+      {
+        "assignmentOp": {
+          "value": "=",
+          "ln": 19,
+          "col": 38,
+          "tokenType": "ASSIGNMENT_OP"
+        },
+        "name": {
+          "value": "worker_pool_variable",
+          "ln": 19,
+          "col": 3,
+          "tokenType": "SYMBOL"
+        },
+        "type": "AttributeNode",
+        "value": {
+          "literalType": "string",
+          "type": "LiteralNode",
+          "value": {
+            "value": "\"\"",
+            "ln": 19,
+            "col": 40,
+            "tokenType": "STRING"
+          },
+          "problems": []
+        }
+      }
+    ],
+    "blockStart": {
+      "value": "{",
+      "ln": 1,
+      "col": 19,
+      "tokenType": "OPEN_BRACKET"
+    },
+    "blockEnd": {
+      "value": "}",
+      "ln": 20,
+      "col": 1,
+      "tokenType": "CLOSE_BRACKET"
+    },
+    "type": "BlockNode",
+    "name": {
+      "value": "action",
+      "ln": 1,
+      "col": 1,
+      "tokenType": "SYMBOL"
+    },
+    "labels": [
+      {
+        "literalType": "string",
+        "type": "LiteralNode",
+        "value": {
+          "value": "\"do_stuff\"",
+          "ln": 1,
+          "col": 8,
+          "tokenType": "STRING"
+        },
+        "problems": []
+      }
+    ]
+  },
+  {
+    "type": "EOFNode",
+    "value": {
+      "value": "EOF",
+      "ln": 21,
+      "col": 1,
+      "tokenType": "EOF"
+    }
+  }
+]
