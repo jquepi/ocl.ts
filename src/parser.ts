@@ -38,12 +38,13 @@ export class Parser {
     this.pc += 1;
     if (this.pc >= this.tokens.length) {
       this.currentToken = this.tokens[this.tokens.length - 1];
+    } else {
+      this.currentToken = this.tokens[this.pc];
     }
-    this.currentToken = this.tokens[this.pc];
   }
 
   private peekToken(i = 1): Token {
-    if (this.pc + i >= this.tokens.length) {
+    if (this.pc + i >= this.tokens.length - 1) {
       return this.tokens[this.tokens.length - 1];
     }
     return this.tokens[this.pc + i];
@@ -268,13 +269,21 @@ export class Parser {
     }
     const blockStart = this.currentToken;
     this.nextToken();
-    // TODO handle new line
-    this.nextToken();
-    const block: BlockNode["block"] = [];
-    while (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType)) {
-      block.push(this.nextNode());
+    if (this.currentToken.tokenType === TokenType.NEW_LINE) {
+      this.nextToken();
+    } else if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+      // TODO handle unexpected token
     }
-    this.nextToken();
+    const block: BlockNode["block"] = [];
+    while (
+      ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType) &&
+      ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)
+    ) {
+        block.push(this.nextNode());
+    }
+    if (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)) {
+      this.nextToken();
+    }
     const blockEnd = this.currentToken;
     this.nextToken();
     const blockNode: BlockNode = {
@@ -306,7 +315,7 @@ export class Parser {
   }
 
   private createAST(): void {
-    while (this.currentToken !== undefined && this.currentToken.tokenType !== TokenType.EOF) {
+    while (this.currentToken.tokenType !== TokenType.EOF) {
       this.ast.push(this.nextNode());
     }
   }
