@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.0.5](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.4...v0.0.5) (2021-10-25)
+
+
+### Bug Fixes
+
+* added check for undefined token ([ecfaf52](https://www.github.com/OctopusDeploy/ocl.ts/commit/ecfaf52ce9d6628299332b153c72dcd25b4101a0))
+
 ### [0.0.4](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.3...v0.0.4) (2021-10-22)
 
 
