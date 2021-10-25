@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.0.6](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.5...v0.0.6) (2021-10-25)
+
+
+### Bug Fixes
+
+* parsing empty blocks incorrectly ([c19b89e](https://www.github.com/OctopusDeploy/ocl.ts/commit/c19b89e27d94ed8593130a068967a4a3ce2e0b5b))
+
 ### [0.0.5](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.4...v0.0.5) (2021-10-25)
 
 
