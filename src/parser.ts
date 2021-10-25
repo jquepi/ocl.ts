@@ -306,7 +306,7 @@ export class Parser {
   }
 
   private createAST(): void {
-    while (this.currentToken.tokenType !== TokenType.EOF) {
+    while (this.currentToken !== undefined && this.currentToken.tokenType !== TokenType.EOF) {
       this.ast.push(this.nextNode());
     }
   }
