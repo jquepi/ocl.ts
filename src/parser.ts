@@ -229,10 +229,10 @@ export class Parser {
           values.push(this.handleLiteralNode(LiteralType.DECIMAL, false));
           break;
         }
-        // case TokenType.OPEN_BRACKET: {
-        //   values.push(this.handleDictionaryNode());
-        //   break;
-        // }
+        case TokenType.OPEN_BRACKET: {
+          values.push(this.handleDictionaryNode());
+          break;
+        }
       }
       this.nextToken();
       // TODO handle missing seperator
