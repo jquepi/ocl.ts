@@ -75,7 +75,7 @@ export class Parser {
     }
   }
 
-  private handleSymbol(): AttributeNode | BlockNode {
+  private handleSymbol(): AttributeNode | BlockNode | RecoveryNode {
     switch(this.peekToken().tokenType) {
       case TokenType.ASSIGNMENT_OP: {
         return this.handleAttribute();
@@ -87,8 +87,11 @@ export class Parser {
         return this.handleBlockNode();
       }
       default: {
-        // TODO change to handle unexpted token
-        return this.handleAttribute();
+        this.nextToken();
+        return this.handleRecoveryNode(
+          'Unexpected token. Expected Arrtibute or Block definition.',
+          this.currentToken,
+        );
       }
     }
   }
