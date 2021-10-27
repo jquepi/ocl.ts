@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.0](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.6...v0.1.0) (2021-10-27)
+
+
+### Features
+
+* parse dictionary array ([cc6a797](https://www.github.com/OctopusDeploy/ocl.ts/commit/cc6a7972d11294a18bb9a089088aa4cfc44d1b46))
+* tolerance on parsing arrays ([ee2973f](https://www.github.com/OctopusDeploy/ocl.ts/commit/ee2973f312f3619590e7d0066487b1ea86b2e48f))
+* tolerance on parsing blocks ([fb69a50](https://www.github.com/OctopusDeploy/ocl.ts/commit/fb69a50b305ad15f38ed618aea86de0b6bd8f05e))
+* tolerance on parsing dictionaries ([24b5663](https://www.github.com/OctopusDeploy/ocl.ts/commit/24b5663d4619256a6de5c92fc64e7bbe74754cee))
+* tolerance on parsing symbols ([1a5f131](https://www.github.com/OctopusDeploy/ocl.ts/commit/1a5f13194cf9e420a71c5049c50fc67b4e71b5e2))
+
 ### [0.0.6](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.5...v0.0.6) (2021-10-25)
 
 
