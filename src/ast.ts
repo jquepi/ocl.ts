@@ -60,7 +60,7 @@ export interface DictionaryNode extends BaseNode {
   blockEnd: Token;
   blockStart: Token;
   children: AST;
-  entries: AttributeNode[];
+  entries: (AttributeNode|RecoveryNode)[];
   type: NodeType.DICTIONARY_NODE;
 }
 

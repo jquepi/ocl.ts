@@ -181,27 +181,46 @@ export class Parser {
   }
 
   private handleDictionaryNode(): DictionaryNode {
+    const problems: string[] = [];
     const blockStart = this.currentToken;
     this.nextToken();
-    // TODO handle missing newline
     const entries: DictionaryNode["entries"] = [];
-    while (this.peekToken().tokenType !== TokenType.CLOSE_BRACKET) {
-      // TODO handle when token is not attibute
+    while (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType)) {
       if (this.currentToken.tokenType === TokenType.SYMBOL) {
         entries.push(this.handleAttribute());
-      } else {
+      }
+      else {
+        if (this.currentToken.tokenType !== TokenType.NEW_LINE) {
+          problems.push('Unexpected Token. Expected attribute.');
+          entries.push(this.handleRecoveryNode(
+            'Unexpected Token. Expected attribute.',
+            this.currentToken,
+          ));
+        }
         this.nextToken();
       } 
     }
     this.nextToken();
-    const blockEnd = this.currentToken;
-    // TODO handle missing newline
+    let blockEnd = this.currentToken;
+    if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+      problems.push('Unexpected Token. Expected }.')
+      blockEnd = {
+        value: '}',
+        tokenType: TokenType.RECOVERY,
+        col: this.currentToken.col,
+        ln: this.currentToken.ln
+      };
+    }
+    if (this.peekToken().tokenType !== TokenType.NEW_LINE) {
+      problems.push('Unexpected token. Expected new line.');
+    }
     const dictionaryNode: DictionaryNode = {
       children: entries,
       blockStart,
       blockEnd,
       entries,
-      type: NodeType.DICTIONARY_NODE
+      type: NodeType.DICTIONARY_NODE,
+      problems
     };
     for (const attribute of entries) {
       attribute.parent = dictionaryNode;
