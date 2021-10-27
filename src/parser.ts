@@ -210,12 +210,17 @@ export class Parser {
   }
 
   public handleArrayNode(): ArrayNode {
+    const problems: string[] = [];
     const arrayStart = this.currentToken;
     this.nextToken();
-    // TODO handle unexpted token & newline
     const values: ArrayNode["values"] = [];
-    while (this.currentToken.tokenType !== TokenType.CLOSE_ARRAY) {
-      // TODO handle when token is not litteral or seperator
+    while (![TokenType.CLOSE_ARRAY, TokenType.EOF].includes(this.currentToken.tokenType)) {
+      while (this.currentToken.tokenType === TokenType.NEW_LINE) {
+        this.nextToken();
+      }
+      if ([TokenType.CLOSE_ARRAY].includes(this.currentToken.tokenType)) {
+        break;
+      }
       switch (this.currentToken.tokenType) {
         case TokenType.STRING: {
           values.push(this.handleLiteralNode(LiteralType.STRING, false));
@@ -233,28 +238,71 @@ export class Parser {
           values.push(this.handleDictionaryNode());
           break;
         }
+        default: {
+          problems.push('Unexpected Token. Expected literal.');
+          values.push(this.handleRecoveryNode(
+            'Unexpected Token. Expected literal.',
+            this.currentToken,
+          ));
+          break;
+        }
+      }
+      if (values[values.length-1].type === NodeType.RECOVERY_NODE && this.currentToken.tokenType === TokenType.SYMBOL) {
+        if (this.peekToken().tokenType === TokenType.ASSIGNMENT_OP) {
+          this.currentToken = this.peekToken(-1);
+          this.pc -= 1;
+          break;
+        }
+        else if (this.peekToken().tokenType === TokenType.STRING) {
+          let peekCounter = 2;
+          while (this.peekToken(peekCounter).tokenType === TokenType.STRING) {
+            peekCounter += 1;
+          }
+          if (this.peekToken(peekCounter).tokenType === TokenType.OPEN_BRACKET) {
+            this.currentToken = this.peekToken(-1);
+            this.pc -= 1;
+            break;
+          }
+        }
+        else if (this.peekToken().tokenType === TokenType.OPEN_BRACKET) {
+          this.currentToken = this.peekToken(-1);
+          this.pc -= 1;
+          break;
+        }
       }
       this.nextToken();
-      // TODO handle missing seperator
-      if (this.currentToken.tokenType === TokenType.ARRAY_ITEM_SEPERATOR) {
+      if (this.currentToken.tokenType === TokenType.ARRAY_ITEM_SEPERATOR ) {
         this.nextToken();
       }
-
-      // handle new lines correctly
-      while (this.currentToken.tokenType === TokenType.NEW_LINE) {
-        this.nextToken();
+      else if (![TokenType.CLOSE_ARRAY].includes(this.currentToken.tokenType) ) {
+        while (this.peekToken(0).tokenType === TokenType.NEW_LINE) {
+          this.nextToken();
+        }
+        if (this.peekToken(0).tokenType !== TokenType.CLOSE_ARRAY) {
+          problems.push('Missing Token. Expected seperator.');
+        }
       }
-      
     }
-    // TODO handle when not closing token
-    const arrayEnd = this.currentToken;
-    this.nextToken();
+    let arrayEnd = this.currentToken;
+    if (this.currentToken.tokenType !== TokenType.CLOSE_ARRAY) {
+      problems.push('Missing Token. Expected ].')
+      arrayEnd = {
+        value: ']',
+        tokenType: TokenType.RECOVERY,
+        tokenError: '',
+        col: this.currentToken.col,
+        ln: this.currentToken.ln
+      }
+    } else {
+      this.nextToken();
+    }
     const arrayNode: ArrayNode = {
       children: values,
       type: NodeType.ARRAY_NODE,
       arrayStart,
       arrayEnd,
-      values
+      values,
+      problems,
     }
     for (const val of values) {
       val.parent = arrayNode;

@@ -35,7 +35,7 @@ export interface ArrayNode extends BaseNode {
   arrayStart: Token;
   children: AST;
   type: NodeType.ARRAY_NODE;
-  values: (LiteralNode|DictionaryNode)[];
+  values: (LiteralNode|DictionaryNode|RecoveryNode)[];
 }
 
 export interface AttributeNode extends BaseNode {
