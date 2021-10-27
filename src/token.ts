@@ -12,7 +12,8 @@ export enum TokenType {
   OPEN_ARRAY,
   OPEN_BRACKET,
   STRING,
-  SYMBOL
+  SYMBOL,
+  RECOVERY,
 }
 
 export interface Token {

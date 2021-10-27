@@ -47,6 +47,9 @@ export class Parser {
     if (this.pc + i >= this.tokens.length - 1) {
       return this.tokens[this.tokens.length - 1];
     }
+    if (this.pc + i < 0) {
+      return this.tokens[0];
+    }
     return this.tokens[this.pc + i];
   }
 
@@ -260,6 +263,7 @@ export class Parser {
   }
 
   private handleBlockNode(): BlockNode {
+    const problems: string[] = [];
     const name = this.currentToken;
     this.nextToken();
     const labels: BlockNode["labels"] = [];
@@ -267,28 +271,53 @@ export class Parser {
       labels.push(this.handleLiteralNode(LiteralType.STRING, false));
       this.nextToken();
     }
+    let blockStart = this.currentToken;
     if (this.currentToken.tokenType !== TokenType.OPEN_BRACKET) {
-      // TODO handle missing open bracket
+      problems.push('Missing token. Expected {.');
+      const token = this.peekToken(-1);
+      blockStart = {
+        value: '{',
+        tokenType: TokenType.RECOVERY,
+        col: token.col,
+        ln: token.ln,
+      } 
     }
-    const blockStart = this.currentToken;
-    this.nextToken();
+    else {
+      this.nextToken();
+    }
     if (this.currentToken.tokenType === TokenType.NEW_LINE) {
       this.nextToken();
-    } else if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
-      // TODO handle unexpected token
+    }
+    else if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+      problems.push('Missing token. Expected new line.');
     }
     const block: BlockNode["block"] = [];
     while (
       ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType) &&
       ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)
     ) {
-        block.push(this.nextNode());
+        if (this.currentToken.tokenType !== TokenType.NEW_LINE) {
+          block.push(this.nextNode());
+        }
+        else {
+          this.nextToken();
+        }
     }
     if (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)) {
       this.nextToken();
     }
-    const blockEnd = this.currentToken;
-    this.nextToken();
+    let blockEnd = this.currentToken;
+    if (this.currentToken.tokenType === TokenType.EOF) {
+      problems.push('Missing token. Expected }.')
+      blockEnd = {
+        value: '}',
+        tokenType: TokenType.RECOVERY,
+        col: this.currentToken.col,
+        ln: this.currentToken.ln,
+      }
+    } else {
+      this.nextToken();
+    }
     const blockNode: BlockNode = {
       block,
       blockStart,
@@ -296,6 +325,7 @@ export class Parser {
       children: block,
       type: NodeType.BLOCK_NODE,
       name,
+      problems,
     }
     if (labels.length > 0) {
       for (const label of labels) {
