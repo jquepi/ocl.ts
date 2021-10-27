@@ -47,6 +47,9 @@ export class Parser {
     if (this.pc + i >= this.tokens.length - 1) {
       return this.tokens[this.tokens.length - 1];
     }
+    if (this.pc + i < 0) {
+      return this.tokens[0];
+    }
     return this.tokens[this.pc + i];
   }
 
@@ -75,7 +78,7 @@ export class Parser {
     }
   }
 
-  private handleSymbol(): AttributeNode | BlockNode {
+  private handleSymbol(): AttributeNode | BlockNode | RecoveryNode {
     switch(this.peekToken().tokenType) {
       case TokenType.ASSIGNMENT_OP: {
         return this.handleAttribute();
@@ -87,8 +90,11 @@ export class Parser {
         return this.handleBlockNode();
       }
       default: {
-        // TODO change to handle unexpted token
-        return this.handleAttribute();
+        this.nextToken();
+        return this.handleRecoveryNode(
+          'Unexpected token. Expected Arrtibute or Block definition.',
+          this.currentToken,
+        );
       }
     }
   }
@@ -175,27 +181,46 @@ export class Parser {
   }
 
   private handleDictionaryNode(): DictionaryNode {
+    const problems: string[] = [];
     const blockStart = this.currentToken;
     this.nextToken();
-    // TODO handle missing newline
     const entries: DictionaryNode["entries"] = [];
-    while (this.peekToken().tokenType !== TokenType.CLOSE_BRACKET) {
-      // TODO handle when token is not attibute
+    while (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType)) {
       if (this.currentToken.tokenType === TokenType.SYMBOL) {
         entries.push(this.handleAttribute());
-      } else {
+      }
+      else {
+        if (this.currentToken.tokenType !== TokenType.NEW_LINE) {
+          problems.push('Unexpected Token. Expected attribute.');
+          entries.push(this.handleRecoveryNode(
+            'Unexpected Token. Expected attribute.',
+            this.currentToken,
+          ));
+        }
         this.nextToken();
       } 
     }
     this.nextToken();
-    const blockEnd = this.currentToken;
-    // TODO handle missing newline
+    let blockEnd = this.currentToken;
+    if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+      problems.push('Unexpected Token. Expected }.')
+      blockEnd = {
+        value: '}',
+        tokenType: TokenType.RECOVERY,
+        col: this.currentToken.col,
+        ln: this.currentToken.ln
+      };
+    }
+    if (this.peekToken().tokenType !== TokenType.NEW_LINE) {
+      problems.push('Unexpected token. Expected new line.');
+    }
     const dictionaryNode: DictionaryNode = {
       children: entries,
       blockStart,
       blockEnd,
       entries,
-      type: NodeType.DICTIONARY_NODE
+      type: NodeType.DICTIONARY_NODE,
+      problems
     };
     for (const attribute of entries) {
       attribute.parent = dictionaryNode;
@@ -204,12 +229,17 @@ export class Parser {
   }
 
   public handleArrayNode(): ArrayNode {
+    const problems: string[] = [];
     const arrayStart = this.currentToken;
     this.nextToken();
-    // TODO handle unexpted token & newline
     const values: ArrayNode["values"] = [];
-    while (this.currentToken.tokenType !== TokenType.CLOSE_ARRAY) {
-      // TODO handle when token is not litteral or seperator
+    while (![TokenType.CLOSE_ARRAY, TokenType.EOF].includes(this.currentToken.tokenType)) {
+      while (this.currentToken.tokenType === TokenType.NEW_LINE) {
+        this.nextToken();
+      }
+      if ([TokenType.CLOSE_ARRAY].includes(this.currentToken.tokenType)) {
+        break;
+      }
       switch (this.currentToken.tokenType) {
         case TokenType.STRING: {
           values.push(this.handleLiteralNode(LiteralType.STRING, false));
@@ -223,32 +253,75 @@ export class Parser {
           values.push(this.handleLiteralNode(LiteralType.DECIMAL, false));
           break;
         }
-        // case TokenType.OPEN_BRACKET: {
-        //   values.push(this.handleDictionaryNode());
-        //   break;
-        // }
+        case TokenType.OPEN_BRACKET: {
+          values.push(this.handleDictionaryNode());
+          break;
+        }
+        default: {
+          problems.push('Unexpected Token. Expected literal.');
+          values.push(this.handleRecoveryNode(
+            'Unexpected Token. Expected literal.',
+            this.currentToken,
+          ));
+          break;
+        }
+      }
+      if (values[values.length-1].type === NodeType.RECOVERY_NODE && this.currentToken.tokenType === TokenType.SYMBOL) {
+        if (this.peekToken().tokenType === TokenType.ASSIGNMENT_OP) {
+          this.currentToken = this.peekToken(-1);
+          this.pc -= 1;
+          break;
+        }
+        else if (this.peekToken().tokenType === TokenType.STRING) {
+          let peekCounter = 2;
+          while (this.peekToken(peekCounter).tokenType === TokenType.STRING) {
+            peekCounter += 1;
+          }
+          if (this.peekToken(peekCounter).tokenType === TokenType.OPEN_BRACKET) {
+            this.currentToken = this.peekToken(-1);
+            this.pc -= 1;
+            break;
+          }
+        }
+        else if (this.peekToken().tokenType === TokenType.OPEN_BRACKET) {
+          this.currentToken = this.peekToken(-1);
+          this.pc -= 1;
+          break;
+        }
       }
       this.nextToken();
-      // TODO handle missing seperator
-      if (this.currentToken.tokenType === TokenType.ARRAY_ITEM_SEPERATOR) {
+      if (this.currentToken.tokenType === TokenType.ARRAY_ITEM_SEPERATOR ) {
         this.nextToken();
       }
-
-      // handle new lines correctly
-      while (this.currentToken.tokenType === TokenType.NEW_LINE) {
-        this.nextToken();
+      else if (![TokenType.CLOSE_ARRAY].includes(this.currentToken.tokenType) ) {
+        while (this.peekToken(0).tokenType === TokenType.NEW_LINE) {
+          this.nextToken();
+        }
+        if (this.peekToken(0).tokenType !== TokenType.CLOSE_ARRAY) {
+          problems.push('Missing Token. Expected seperator.');
+        }
       }
-      
     }
-    // TODO handle when not closing token
-    const arrayEnd = this.currentToken;
-    this.nextToken();
+    let arrayEnd = this.currentToken;
+    if (this.currentToken.tokenType !== TokenType.CLOSE_ARRAY) {
+      problems.push('Missing Token. Expected ].')
+      arrayEnd = {
+        value: ']',
+        tokenType: TokenType.RECOVERY,
+        tokenError: '',
+        col: this.currentToken.col,
+        ln: this.currentToken.ln
+      }
+    } else {
+      this.nextToken();
+    }
     const arrayNode: ArrayNode = {
       children: values,
       type: NodeType.ARRAY_NODE,
       arrayStart,
       arrayEnd,
-      values
+      values,
+      problems,
     }
     for (const val of values) {
       val.parent = arrayNode;
@@ -257,6 +330,7 @@ export class Parser {
   }
 
   private handleBlockNode(): BlockNode {
+    const problems: string[] = [];
     const name = this.currentToken;
     this.nextToken();
     const labels: BlockNode["labels"] = [];
@@ -264,28 +338,53 @@ export class Parser {
       labels.push(this.handleLiteralNode(LiteralType.STRING, false));
       this.nextToken();
     }
+    let blockStart = this.currentToken;
     if (this.currentToken.tokenType !== TokenType.OPEN_BRACKET) {
-      // TODO handle missing open bracket
+      problems.push('Missing token. Expected {.');
+      const token = this.peekToken(-1);
+      blockStart = {
+        value: '{',
+        tokenType: TokenType.RECOVERY,
+        col: token.col,
+        ln: token.ln,
+      } 
     }
-    const blockStart = this.currentToken;
-    this.nextToken();
+    else {
+      this.nextToken();
+    }
     if (this.currentToken.tokenType === TokenType.NEW_LINE) {
       this.nextToken();
-    } else if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
-      // TODO handle unexpected token
+    }
+    else if (this.currentToken.tokenType !== TokenType.CLOSE_BRACKET) {
+      problems.push('Missing token. Expected new line.');
     }
     const block: BlockNode["block"] = [];
     while (
       ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.peekToken().tokenType) &&
       ![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)
     ) {
-        block.push(this.nextNode());
+        if (this.currentToken.tokenType !== TokenType.NEW_LINE) {
+          block.push(this.nextNode());
+        }
+        else {
+          this.nextToken();
+        }
     }
     if (![TokenType.CLOSE_BRACKET, TokenType.EOF].includes(this.currentToken.tokenType)) {
       this.nextToken();
     }
-    const blockEnd = this.currentToken;
-    this.nextToken();
+    let blockEnd = this.currentToken;
+    if (this.currentToken.tokenType === TokenType.EOF) {
+      problems.push('Missing token. Expected }.')
+      blockEnd = {
+        value: '}',
+        tokenType: TokenType.RECOVERY,
+        col: this.currentToken.col,
+        ln: this.currentToken.ln,
+      }
+    } else {
+      this.nextToken();
+    }
     const blockNode: BlockNode = {
       block,
       blockStart,
@@ -293,6 +392,7 @@ export class Parser {
       children: block,
       type: NodeType.BLOCK_NODE,
       name,
+      problems,
     }
     if (labels.length > 0) {
       for (const label of labels) {
