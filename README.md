@@ -1,3 +1,3 @@
-# ocl.ts
+# :octopus: TypeScript Library for OCL
 
-This library is used to process Octopus Configuration Language (OCL) (see [syntax](https://github.com/OctopusDeploy/ocl#syntax) for more information).
+This repository contains the source code for the TypeScript library for OCL (Octopus Configuration Language, [syntax](https://github.com/OctopusDeploy/ocl#syntax)). It provides an implementation of an abstract syntax tree (AST) for processing OCL fragments/documents.
