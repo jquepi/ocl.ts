@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.1.0...v0.1.1) (2022-02-24)
+
+
+### Bug Fixes
+
+* getting stuck in a loop when parsing ' ([549f19a](https://www.github.com/OctopusDeploy/ocl.ts/commit/549f19ad98753b2648098fb46dda05e6f5679beb))
+
 ## [0.1.0](https://www.github.com/OctopusDeploy/ocl.ts/compare/v0.0.6...v0.1.0) (2021-10-27)
 
 
