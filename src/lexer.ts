@@ -85,7 +85,7 @@ export class Lexer {
       }
       default: {
         let value = '';
-        while (!['EOF', '\n', '\r', ' ', '"', '=', '{', '}', '[', ']', '\'', ','].includes(this.currentChar)) {
+        while (!['EOF', '\n', '\r', ' ', '"', '=', '{', '}', '[', ']', ','].includes(this.currentChar)) {
           value += this.currentChar;
           this.nextChar();
         }
