@@ -12,7 +12,7 @@ jobs:
         with:
           package-name: release-please-action
           release-type: node
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
         with:
           fetch-depth: 0
